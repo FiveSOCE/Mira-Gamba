@@ -37,7 +37,7 @@ public final class GambaCommand implements TabExecutor {
                     return true;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(plugin.component("&cUsage: /gamba create <5000|50000|100000>"));
+                    sender.sendMessage(plugin.component("&cUsage: /gamba create <5000|50000|100000|1000000>"));
                     return true;
                 }
                 long bet;
@@ -48,7 +48,7 @@ public final class GambaCommand implements TabExecutor {
                     return true;
                 }
                 if (!plugin.allowedBet(bet)) {
-                    sender.sendMessage(plugin.component("&cAllowed wagers: $5,000, $50,000, $100,000."));
+                    sender.sendMessage(plugin.component("&cAllowed wagers: $5,000, $50,000, $100,000, $1,000,000."));
                     return true;
                 }
                 SlotMachine machine = machines.create(player, bet);
@@ -105,7 +105,7 @@ public final class GambaCommand implements TabExecutor {
         if (args.length == 1) return List.of("create", "remove", "list", "reload").stream()
                 .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();
         if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
-            return List.of("5000", "50000", "100000").stream().filter(s -> s.startsWith(args[1])).toList();
+            return List.of("5000", "50000", "100000", "1000000").stream().filter(s -> s.startsWith(args[1])).toList();
         }
         return List.of();
     }
