@@ -10,6 +10,7 @@ import org.bukkit.block.data.type.Switch;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TextDisplay;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
@@ -118,6 +119,10 @@ public final class CardMachineService {
                 String id = frame.getPersistentDataContainer().get(machineKey, PersistentDataType.STRING);
                 if (machine.id().toString().equals(id)) frame.remove();
             }
+            for (TextDisplay display : world.getEntitiesByClass(TextDisplay.class)) {
+                String id = display.getPersistentDataContainer().get(machineKey, PersistentDataType.STRING);
+                if (machine.id().toString().equals(id)) display.remove();
+            }
 
             BlockFace right = rotateRight(machine.facing().getOppositeFace());
             for (int x = -3; x <= 3; x++) {
@@ -224,6 +229,18 @@ public final class CardMachineService {
                 button.setBlockData(data, false);
             }
 
+            Location labelLocation = button.getLocation().add(0.5, 0.85, 0.5);
+            TextDisplay label = button.getWorld().spawn(labelLocation, TextDisplay.class, display -> {
+                display.text(plugin.component("&f" + entry.getKey()));
+                display.setBillboard(org.bukkit.entity.Display.Billboard.CENTER);
+                display.setSeeThrough(true);
+                display.setShadowed(true);
+                display.getPersistentDataContainer().set(
+                        machineKey,
+                        PersistentDataType.STRING,
+                        machine.id().toString()
+                );
+            });
         }
     }
 
