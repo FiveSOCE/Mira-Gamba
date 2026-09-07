@@ -2,6 +2,12 @@
 
 Physical 3x3 slot machines for the Mira Minecraft ecosystem.
 
+## Download
+
+[**Download MiraGamba v0.1.0**](https://github.com/FiveSOCE/Mira-Gamba/releases/download/v0.1.0/MiraGamba-0.1.0.jar)
+
+[View All Releases](https://github.com/FiveSOCE/Mira-Gamba/releases)
+
 ## Wager tiers
 
 - $5,000
