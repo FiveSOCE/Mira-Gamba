@@ -14,7 +14,7 @@ machine:
   spin-ticks: 76
   frame-update-ticks: 2
   reel-stop-offset-ticks: [38, 46, 54, 62, 70]
-  max-payout-multiplier: 100.0
+  max-base-payout-multiplier: 100.0
 
 bets:
   allowed:
@@ -23,39 +23,78 @@ bets:
     - 100000
     - 1000000
 
-# A win requires all 5 reels on a configured payline to match.
-# weight controls how often a symbol appears.
-# multiplier is multiplied by the machine wager for each winning line.
+# Base game pays from the leftmost reel across configured paylines.
+# 3, 4 and 5 adjacent matching symbols pay progressively more.
+# Wild substitutes for normal line symbols.
+# Scatter pays anywhere. Orb symbols feed the Hold & Spin feature.
 symbols:
   coal:
     material: COAL
-    weight: 34
-    multiplier: 1.5
+    weight: 20
+    pay-3: 0.20
+    pay-4: 0.50
+    pay-5: 1.20
   iron:
     material: IRON_INGOT
-    weight: 26
-    multiplier: 2.0
+    weight: 18
+    pay-3: 0.25
+    pay-4: 0.70
+    pay-5: 1.80
   gold:
     material: GOLD_INGOT
-    weight: 18
-    multiplier: 3.0
+    weight: 15
+    pay-3: 0.35
+    pay-4: 1.00
+    pay-5: 2.50
   emerald:
     material: EMERALD
     weight: 11
-    multiplier: 5.0
+    pay-3: 0.50
+    pay-4: 1.50
+    pay-5: 4.00
   diamond:
     material: DIAMOND
     weight: 7
-    multiplier: 10.0
+    pay-3: 0.80
+    pay-4: 2.50
+    pay-5: 7.50
   netherite:
     material: NETHERITE_INGOT
-    weight: 3
-    multiplier: 20.0
-  jackpot:
+    weight: 4
+    pay-3: 1.20
+    pay-4: 4.00
+    pay-5: 15.00
+  wild:
     material: NETHER_STAR
-    weight: 1
-    multiplier: 50.0
-    jackpot: true
+    weight: 8
+    wild: true
+  orb:
+    material: MAGMA_CREAM
+    weight: 12
+    orb: true
+  scatter:
+    material: ENDER_EYE
+    weight: 5
+    scatter: true
+
+scatter:
+  pay-3: 0.75
+  pay-4: 3.0
+  pay-5: 10.0
+
+hold-spin:
+  trigger-orbs: 6
+  respin-ticks: 18
+  new-orb-chance: 0.16
+  orb-values: [1.0, 1.0, 1.0, 2.0, 2.0, 3.0, 5.0, 5.0, 10.0, 20.0, 50.0]
+  full-grid-grand-multiplier: 500.0
+  max-payout-multiplier: 1000.0
+  messages:
+    start: "&6&lHOLD & SPIN! &e6+ orbs landed. You get 3 respins."
+    respin: "&eRespins: &f%respins% &8| &eLocked Orbs: &f%orbs%/15"
+    finish: "&6Hold & Spin pays &f%amount% &7(%multiplier%x, %orbs% orbs)"
+    grand: "&d&lFULL GRID GRAND! &f%amount% &d(%multiplier%x total)"
+
 
 # Cell layout:
 #  0  1  2  3  4
