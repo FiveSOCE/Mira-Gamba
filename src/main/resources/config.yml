@@ -71,3 +71,19 @@ paylines:
   lower-zigzag: [10, 6, 12, 8, 14]
   upper-wave: [5, 1, 7, 3, 9]
   lower-wave: [5, 11, 7, 13, 9]
+
+
+cards:
+  backing-material: DARK_OAK_PLANKS
+  button-material: STONE_BUTTON
+  win-multiplier: 10.0
+  messages:
+    start: "&7Start with &cRED &7or &8BLACK&7."
+    busy: "&cSomeone else is already playing this table."
+    color: "&7Guess &cRED &7or &8BLACK&7."
+    higher-lower: "&7Guess &aHIGHER &7or &cLOWER&7 than the previous card."
+    inside-outside: "&7Guess &eINSIDE &7or &6OUTSIDE&7 the values of the first two cards."
+    suit: "&7Guess the suit: &8SPADES&7, &8CLUBS&7, &cHEARTS&7 or &cDIAMONDS&7."
+    correct: "&aCorrect! Drew &f%card%&a."
+    lose: "&cWrong. The card was &f%card%&c. Run over."
+    win: "&d&lALL FOUR! &aThe final card was &f%card%&a. You won &f%amount%&a!"
