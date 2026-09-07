@@ -2,14 +2,14 @@ name: MiraGamba
 version: '${version}'
 main: com.mira.gamba.MiraGambaPlugin
 api-version: '1.21'
-description: Physical in-world slot machines using Vault economy.
+description: Physical in-world casino games using Vault economy.
 authors: [FiveSOCE]
 depend:
   - Vault
 commands:
   gamba:
     description: Manage MiraGamba slot machines.
-    usage: /gamba <create|remove|list|reload> [5000|50000|100000]
+    usage: /gamba <create|remove|list|reload|cards>
 permissions:
   miragamba.admin:
     description: Create, remove and manage slot machines.
