@@ -1,10 +1,10 @@
 # MiraGamba
 
-Physical 3x3 slot machines for the Mira Minecraft ecosystem.
+Physical 3x5 slot machines for the Mira Minecraft ecosystem.
 
 ## Download
 
-[**Download MiraGamba v0.1.0**](https://github.com/FiveSOCE/Mira-Gamba/releases/download/v0.1.0/MiraGamba-0.1.0.jar)
+[**Download MiraGamba v0.2.0**](https://github.com/FiveSOCE/Mira-Gamba/releases/download/v0.2.0/MiraGamba-0.2.0.jar)
 
 [View All Releases](https://github.com/FiveSOCE/Mira-Gamba/releases)
 
@@ -13,6 +13,7 @@ Physical 3x3 slot machines for the Mira Minecraft ecosystem.
 - $5,000
 - $50,000
 - $100,000
+- $1,000,000
 
 All machines use the same weighted symbol table. Payouts scale with the selected wager.
 
@@ -30,21 +31,25 @@ or:
 
 `/gamba create 100000`
 
-MiraGamba creates the backing wall, nine item frames, and the trigger button automatically.
+or:
+
+`/gamba create 1000000`
+
+MiraGamba creates the backing wall, fifteen item frames, and a wall-mounted trigger button automatically.
 
 ## Gameplay
 
 1. Player presses the machine button.
 2. Vault charges the configured wager.
-3. The nine item frames animate through weighted slot symbols.
+3. The fifteen item frames animate through weighted slot symbols.
 4. Reels stop left-to-right.
-5. Five paylines are evaluated:
+5. Nine 5-reel paylines are evaluated:
    - top row
    - middle row
    - bottom row
    - diagonal down
    - diagonal up
-6. Three matching symbols on a payline pays `bet × symbol multiplier`.
+6. All five reels matching on a payline pays `bet × symbol multiplier`.
 7. Multiple winning paylines stack, capped by the configured maximum payout multiplier.
 
 ## Default symbols
@@ -61,7 +66,7 @@ Weights, materials and multipliers are editable in `config.yml`.
 
 ## Commands
 
-- `/gamba create <5000|50000|100000>`
+- `/gamba create <5000|50000|100000|1000000>`
 - `/gamba remove`
 - `/gamba list`
 - `/gamba reload`
@@ -78,3 +83,12 @@ Weights, materials and multipliers are editable in `config.yml`.
 - Java 21
 - Vault
 - Vault-compatible economy provider
+
+
+## v0.2.0 changes
+
+- Machines are now 3 rows x 5 reels (15 item frames).
+- Trigger buttons are explicitly mounted to the cabinet wall instead of floating.
+- Different machines can spin concurrently, including multiple machines triggered by the same player.
+- The $1,000,000 wager tier is enabled.
+- Existing saved machines are upgraded to the 15-frame layout when missing frames are rebuilt.
