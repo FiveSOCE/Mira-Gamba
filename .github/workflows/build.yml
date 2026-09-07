@@ -52,5 +52,5 @@ jobs:
             gh release create "$TAG" "$JAR" \
               --target "${{ github.sha }}" \
               --title "MiraGamba $TAG" \
-              --notes "Upgrades physical slot machines to 3 rows x 5 reels, fixes wall-mounted button placement, allows one player to run multiple different machines concurrently, adds nine 5-reel paylines, and adds the $1,000,000 wager tier."
+              --notes "Adds a physical Four Guess card table alongside slots: Red/Black, Higher/Lower, Inside/Outside and Suit. Uses a shuffled 52-card deck with no duplicate draw in a run, labeled physical buttons, named revealed cards and a configurable 10x completion payout."
           fi
