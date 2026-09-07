@@ -4,7 +4,7 @@ Physical 3x5 slot machines for the Mira Minecraft ecosystem.
 
 ## Download
 
-[**Download MiraGamba v0.3.0**](https://github.com/FiveSOCE/Mira-Gamba/releases/download/v0.3.0/MiraGamba-0.3.0.jar)
+[**Download MiraGamba v0.4.0**](https://github.com/FiveSOCE/Mira-Gamba/releases/download/v0.4.0/MiraGamba-0.4.0.jar)
 
 [View All Releases](https://github.com/FiveSOCE/Mira-Gamba/releases)
 
@@ -49,8 +49,12 @@ MiraGamba creates the backing wall, fifteen item frames, and a wall-mounted trig
    - bottom row
    - diagonal down
    - diagonal up
-6. All five reels matching on a payline pays `bet × symbol multiplier`.
-7. Multiple winning paylines stack, capped by the configured maximum payout multiplier.
+6. Normal line wins start at 3 matching adjacent reels from the leftmost reel.
+7. 4- and 5-reel matches pay progressively more.
+8. Wild substitutes for normal symbols.
+9. 3+ Scatter symbols pay anywhere on the board.
+10. 6+ Orb symbols trigger Hold & Spin: 3 respins, new orbs lock and reset the counter to 3, and every locked orb carries a bet multiplier.
+11. Filling all 15 positions awards the configured Grand multiplier.
 
 ## Default symbols
 
@@ -120,3 +124,23 @@ Commands:
 - `/gamba cards create <bet>`
 - `/gamba cards remove`
 - `/gamba cards list`
+
+
+## v0.4.0 slot payout overhaul
+
+The 5x3 slot no longer requires five identical symbols to produce a normal win.
+
+Base game:
+- 3 matching adjacent reels from the leftmost reel can pay
+- 4 and 5 matches scale upward
+- Wild substitutes for normal symbols
+- Scatter pays anywhere
+
+Hold & Spin:
+- 6+ Orbs on the initial spin trigger the feature
+- starts with 3 respins
+- every newly landed Orb locks and resets respins to 3
+- each Orb carries a configurable multiplier value
+- filling all 15 spaces awards the configured Grand multiplier
+
+All symbol weights, 3/4/5 payouts, scatter values, orb values, respin chance and Grand multiplier are configurable.
