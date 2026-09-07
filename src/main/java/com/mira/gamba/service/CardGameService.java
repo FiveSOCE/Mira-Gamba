@@ -41,6 +41,7 @@ public final class CardGameService {
                 return;
             }
 
+            clearFrames(machine);
             session = new Session(player.getUniqueId(), freshDeck(), new ArrayList<>(), 0);
             sessions.put(machine.id(), session);
         } else if (!session.playerId().equals(player.getUniqueId())) {
@@ -166,6 +167,12 @@ public final class CardGameService {
         sessions.remove(machine.id());
         plugin.msg(player, "cards.messages.lose", "%card%", card.displayName());
         player.getWorld().playSound(machine.origin(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.9f, 0.7f);
+    }
+
+    private void clearFrames(CardMachine machine) {
+        for (ItemFrame frame : machines.frames(machine)) {
+            frame.setItem(new ItemStack(org.bukkit.Material.AIR), false);
+        }
     }
 
     private PlayingCard draw(Session session) {
