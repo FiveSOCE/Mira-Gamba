@@ -23,23 +23,34 @@ jobs:
         with:
           gradle-version: '8.10'
 
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          VERSION=$(sed -n 's/^version = "\([^"]*\)"/\1/p' build.gradle.kts | head -n1)
+          test -n "$VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
       - name: Build
         run: gradle clean build --stacktrace
 
       - uses: actions/upload-artifact@v4
         with:
-          name: MiraGamba-0.1.0
-          path: build/libs/MiraGamba-0.1.0.jar
+          name: MiraGamba-${{ steps.version.outputs.version }}
+          path: build/libs/MiraGamba-${{ steps.version.outputs.version }}.jar
           if-no-files-found: error
 
       - name: Publish release
         if: success() && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          if ! gh release view "v0.1.0" >/dev/null 2>&1; then
-            gh release create "v0.1.0" "build/libs/MiraGamba-0.1.0.jar" \
+          TAG="v$VERSION"
+          JAR="build/libs/MiraGamba-$VERSION.jar"
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" "$JAR" \
               --target "${{ github.sha }}" \
-              --title "MiraGamba v0.1.0" \
-              --notes "Physical 3x3 in-world slot machines with Vault economy wagers, weighted symbols, five paylines, configurable payouts, and $5k/$50k/$100k machine tiers."
+              --title "MiraGamba $TAG" \
+              --notes "Upgrades physical slot machines to 3 rows x 5 reels, fixes wall-mounted button placement, allows one player to run multiple different machines concurrently, adds nine 5-reel paylines, and adds the $1,000,000 wager tier."
           fi
