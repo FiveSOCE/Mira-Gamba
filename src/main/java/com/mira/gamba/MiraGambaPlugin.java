@@ -2,7 +2,10 @@ package com.mira.gamba;
 
 import com.mira.gamba.command.GambaCommand;
 import com.mira.gamba.listener.MachineListener;
+import com.mira.gamba.listener.CardMachineListener;
 import com.mira.gamba.service.EconomyService;
+import com.mira.gamba.service.CardMachineService;
+import com.mira.gamba.service.CardGameService;
 import com.mira.gamba.service.MachineService;
 import com.mira.gamba.service.SpinService;
 import com.mira.gamba.service.SymbolService;
@@ -20,6 +23,8 @@ public final class MiraGambaPlugin extends JavaPlugin {
     private SymbolService symbols;
     private MachineService machines;
     private SpinService spins;
+    private CardMachineService cardMachines;
+    private CardGameService cardGames;
 
     @Override
     public void onEnable() {
@@ -35,8 +40,10 @@ public final class MiraGambaPlugin extends JavaPlugin {
         symbols = new SymbolService(this);
         machines = new MachineService(this);
         spins = new SpinService(this, machines, symbols, economy);
+        cardMachines = new CardMachineService(this);
+        cardGames = new CardGameService(this, cardMachines, economy);
 
-        GambaCommand executor = new GambaCommand(this, machines);
+        GambaCommand executor = new GambaCommand(this, machines, cardMachines);
         PluginCommand command = getCommand("gamba");
         if (command != null) {
             command.setExecutor(executor);
@@ -44,6 +51,7 @@ public final class MiraGambaPlugin extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new MachineListener(this, machines, spins), this);
+        getServer().getPluginManager().registerEvents(new CardMachineListener(cardMachines, cardGames), this);
         getServer().getScheduler().runTaskLater(this, machines::respawnMissingFrames, 20L);
 
         getLogger().info("MiraGamba enabled with " + machines.all().size() + " slot machine(s).");
@@ -52,6 +60,7 @@ public final class MiraGambaPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         if (machines != null) machines.save();
+        if (cardMachines != null) cardMachines.save();
     }
 
     public void reloadEverything() {
