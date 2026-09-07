@@ -24,12 +24,26 @@ public final class SymbolService {
             for (String id : section.getKeys(false)) {
                 ConfigurationSection s = section.getConfigurationSection(id);
                 if (s == null) continue;
+
                 Material material = Material.matchMaterial(s.getString("material", ""));
                 if (material == null) continue;
+
                 int weight = Math.max(1, s.getInt("weight", 1));
-                double multiplier = Math.max(0D, s.getDouble("multiplier", 0D));
-                boolean jackpot = s.getBoolean("jackpot", false);
-                loaded.add(new SlotSymbol(id, material, weight, multiplier, jackpot));
+                double pay3 = Math.max(0D, s.getDouble("pay-3", 0D));
+                double pay4 = Math.max(pay3, s.getDouble("pay-4", pay3));
+                double pay5 = Math.max(pay4, s.getDouble("pay-5", pay4));
+
+                loaded.add(new SlotSymbol(
+                        id,
+                        material,
+                        weight,
+                        pay3,
+                        pay4,
+                        pay5,
+                        s.getBoolean("wild", false),
+                        s.getBoolean("orb", false),
+                        s.getBoolean("scatter", false)
+                ));
             }
         }
         symbols = List.copyOf(loaded);
@@ -44,6 +58,10 @@ public final class SymbolService {
             if (roll < 0) return symbol;
         }
         return symbols.get(symbols.size() - 1);
+    }
+
+    public Optional<SlotSymbol> firstOrb() {
+        return symbols.stream().filter(SlotSymbol::orb).findFirst();
     }
 
     public List<SlotSymbol> symbols() {
