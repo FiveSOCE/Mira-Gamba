@@ -52,5 +52,5 @@ jobs:
             gh release create "$TAG" "$JAR" \
               --target "${{ github.sha }}" \
               --title "MiraGamba $TAG" \
-              --notes "Adds a physical Four Guess card table alongside slots: Red/Black, Higher/Lower, Inside/Outside and Suit. Uses a shuffled 52-card deck with no duplicate draw in a run, labeled physical buttons, named revealed cards and a configurable 10x completion payout."
+              --notes "Overhauls 5x3 slots with frequent 3/4/5-reel left-to-right line pays, Wild substitution, Scatter-anywhere payouts, and a 6+ Orb Hold & Spin feature with three resetting respins, locked multiplier orbs and a full-grid Grand bonus."
           fi
