@@ -86,7 +86,7 @@ public final class MachineService {
         triggerBlock.setType(trigger, false);
 
         if (triggerBlock.getBlockData() instanceof Switch button) {
-            button.setFace(FaceAttachable.AttachedFace.WALL);
+            button.setAttachedFace(FaceAttachable.AttachedFace.WALL);
             button.setFacing(front);
             triggerBlock.setBlockData(button, false);
         }
@@ -156,7 +156,7 @@ public final class MachineService {
 
             Block triggerBlock = machine.trigger().getBlock();
             if (triggerBlock.getBlockData() instanceof Switch button) {
-                button.setFace(FaceAttachable.AttachedFace.WALL);
+                button.setAttachedFace(FaceAttachable.AttachedFace.WALL);
                 button.setFacing(front);
                 triggerBlock.setBlockData(button, false);
             }
