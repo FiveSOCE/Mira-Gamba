@@ -1,0 +1,25 @@
+name: MiraGamba
+version: '${version}'
+main: com.mira.gamba.MiraGambaPlugin
+api-version: '1.21'
+description: Physical in-world slot machines using Vault economy.
+authors: [FiveSOCE]
+depend:
+  - Vault
+commands:
+  gamba:
+    description: Manage MiraGamba slot machines.
+    usage: /gamba <create|remove|list|reload> [5000|50000|100000]
+permissions:
+  miragamba.admin:
+    description: Create, remove and manage slot machines.
+    default: op
+  miragamba.use:
+    description: Use MiraGamba slot machines.
+    default: true
+  miragamba.*:
+    description: Grants all MiraGamba permissions.
+    default: op
+    children:
+      miragamba.admin: true
+      miragamba.use: true
