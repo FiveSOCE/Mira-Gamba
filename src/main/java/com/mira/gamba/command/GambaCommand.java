@@ -1,7 +1,9 @@
 package com.mira.gamba.command;
 
 import com.mira.gamba.MiraGambaPlugin;
+import com.mira.gamba.model.CardMachine;
 import com.mira.gamba.model.SlotMachine;
+import com.mira.gamba.service.CardMachineService;
 import com.mira.gamba.service.MachineService;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -11,11 +13,13 @@ import java.util.Locale;
 
 public final class GambaCommand implements TabExecutor {
     private final MiraGambaPlugin plugin;
-    private final MachineService machines;
+    private final MachineService slots;
+    private final CardMachineService cards;
 
-    public GambaCommand(MiraGambaPlugin plugin, MachineService machines) {
+    public GambaCommand(MiraGambaPlugin plugin, MachineService slots, CardMachineService cards) {
         this.plugin = plugin;
-        this.machines = machines;
+        this.slots = slots;
+        this.cards = cards;
     }
 
     @Override
@@ -30,6 +34,10 @@ public final class GambaCommand implements TabExecutor {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("cards")) {
+            return handleCards(sender, args);
+        }
+
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "create" -> {
                 if (!(sender instanceof Player player)) {
@@ -40,19 +48,11 @@ public final class GambaCommand implements TabExecutor {
                     sender.sendMessage(plugin.component("&cUsage: /gamba create <5000|50000|100000|1000000>"));
                     return true;
                 }
-                long bet;
-                try {
-                    bet = Long.parseLong(args[1]);
-                } catch (NumberFormatException ex) {
-                    sender.sendMessage(plugin.component("&cInvalid wager."));
-                    return true;
-                }
-                if (!plugin.allowedBet(bet)) {
-                    sender.sendMessage(plugin.component("&cAllowed wagers: $5,000, $50,000, $100,000, $1,000,000."));
-                    return true;
-                }
-                SlotMachine machine = machines.create(player, bet);
-                sender.sendMessage(plugin.component("&aCreated slot machine &f" + machine.id() + " &awith wager &f" + plugin.money(bet) + "&a."));
+                long bet = parseBet(sender, args[1]);
+                if (bet < 0) return true;
+                SlotMachine machine = slots.create(player, bet);
+                sender.sendMessage(plugin.component("&aCreated slot machine &f" + machine.id()
+                        + " &awith wager &f" + plugin.money(bet) + "&a."));
                 return true;
             }
             case "remove" -> {
@@ -60,23 +60,25 @@ public final class GambaCommand implements TabExecutor {
                     sender.sendMessage("Players only.");
                     return true;
                 }
-                SlotMachine machine = machines.nearest(player.getLocation(), 6D);
+                SlotMachine machine = slots.nearest(player.getLocation(), 6D);
                 if (machine == null) {
                     sender.sendMessage(plugin.component("&cNo slot machine found within 6 blocks."));
                     return true;
                 }
-                machines.remove(machine);
+                slots.remove(machine);
                 sender.sendMessage(plugin.component("&aRemoved slot machine &f" + machine.id() + "&a."));
                 return true;
             }
             case "list" -> {
-                sender.sendMessage(plugin.component("&5&lMiraGamba &8>> &7Machines: &f" + machines.all().size()));
-                for (SlotMachine machine : machines.all()) {
-                    sender.sendMessage(plugin.component("&7- &f" + machine.id() + " &7Bet &f" + plugin.money(machine.bet())
-                            + " &8(" + machine.trigger().getWorld().getName() + " "
-                            + machine.trigger().getBlockX() + ","
-                            + machine.trigger().getBlockY() + ","
-                            + machine.trigger().getBlockZ() + ")"));
+                sender.sendMessage(plugin.component("&5&lMiraGamba &8>> &7Slot machines: &f" + slots.all().size()));
+                for (SlotMachine machine : slots.all()) {
+                    sender.sendMessage(plugin.component("&7- &f" + machine.id()
+                            + " &7Bet &f" + plugin.money(machine.bet())));
+                }
+                sender.sendMessage(plugin.component("&7Card tables: &f" + cards.all().size()));
+                for (CardMachine machine : cards.all()) {
+                    sender.sendMessage(plugin.component("&7- &f" + machine.id()
+                            + " &7Bet &f" + plugin.money(machine.bet())));
                 }
                 return true;
             }
@@ -92,21 +94,110 @@ public final class GambaCommand implements TabExecutor {
         }
     }
 
+    private boolean handleCards(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(plugin.component("&cUsage: /gamba cards <create|remove|list> [bet]"));
+            return true;
+        }
+
+        switch (args[1].toLowerCase(Locale.ROOT)) {
+            case "create" -> {
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage("Players only.");
+                    return true;
+                }
+                if (args.length < 3) {
+                    sender.sendMessage(plugin.component("&cUsage: /gamba cards create <5000|50000|100000|1000000>"));
+                    return true;
+                }
+                long bet = parseBet(sender, args[2]);
+                if (bet < 0) return true;
+
+                CardMachine machine = cards.create(player, bet);
+                sender.sendMessage(plugin.component("&aCreated four-guess card table &f" + machine.id()
+                        + " &awith wager &f" + plugin.money(bet) + "&a."));
+                return true;
+            }
+            case "remove" -> {
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage("Players only.");
+                    return true;
+                }
+                if (!cards.removeNearest(player.getLocation(), 8D)) {
+                    sender.sendMessage(plugin.component("&cNo card table found within 8 blocks."));
+                    return true;
+                }
+                sender.sendMessage(plugin.component("&aRemoved nearest four-guess card table."));
+                return true;
+            }
+            case "list" -> {
+                sender.sendMessage(plugin.component("&5&lMiraGamba &8>> &7Card tables: &f" + cards.all().size()));
+                for (CardMachine machine : cards.all()) {
+                    sender.sendMessage(plugin.component("&7- &f" + machine.id()
+                            + " &7Bet &f" + plugin.money(machine.bet())));
+                }
+                return true;
+            }
+            default -> {
+                sender.sendMessage(plugin.component("&cUsage: /gamba cards <create|remove|list> [bet]"));
+                return true;
+            }
+        }
+    }
+
+    private long parseBet(CommandSender sender, String raw) {
+        long bet;
+        try {
+            bet = Long.parseLong(raw);
+        } catch (NumberFormatException ex) {
+            sender.sendMessage(plugin.component("&cInvalid wager."));
+            return -1L;
+        }
+
+        if (!plugin.allowedBet(bet)) {
+            sender.sendMessage(plugin.component("&cAllowed wagers: $5,000, $50,000, $100,000, $1,000,000."));
+            return -1L;
+        }
+        return bet;
+    }
+
     private void help(CommandSender sender) {
         sender.sendMessage(plugin.component("&5&lMiraGamba"));
-        sender.sendMessage(plugin.component("&d/gamba create <5000|50000|100000> &7- place a machine"));
-        sender.sendMessage(plugin.component("&d/gamba remove &7- remove nearest machine"));
-        sender.sendMessage(plugin.component("&d/gamba list &7- list machines"));
+        sender.sendMessage(plugin.component("&d/gamba create <bet> &7- place a 3x5 slot machine"));
+        sender.sendMessage(plugin.component("&d/gamba cards create <bet> &7- place a four-guess card table"));
+        sender.sendMessage(plugin.component("&d/gamba remove &7- remove nearest slot machine"));
+        sender.sendMessage(plugin.component("&d/gamba cards remove &7- remove nearest card table"));
+        sender.sendMessage(plugin.component("&d/gamba list &7- list all machines"));
         sender.sendMessage(plugin.component("&d/gamba reload &7- reload config"));
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length == 1) return List.of("create", "remove", "list", "reload").stream()
-                .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();
-        if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
-            return List.of("5000", "50000", "100000", "1000000").stream().filter(s -> s.startsWith(args[1])).toList();
+        if (args.length == 1) {
+            return List.of("create", "remove", "list", "reload", "cards").stream()
+                    .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();
         }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
+            return bets(args[1]);
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("cards")) {
+            return List.of("create", "remove", "list").stream()
+                    .filter(s -> s.startsWith(args[1].toLowerCase(Locale.ROOT))).toList();
+        }
+
+        if (args.length == 3
+                && args[0].equalsIgnoreCase("cards")
+                && args[1].equalsIgnoreCase("create")) {
+            return bets(args[2]);
+        }
+
         return List.of();
+    }
+
+    private List<String> bets(String prefix) {
+        return List.of("5000", "50000", "100000", "1000000").stream()
+                .filter(s -> s.startsWith(prefix)).toList();
     }
 }
