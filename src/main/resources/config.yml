@@ -3,22 +3,17 @@ messages:
   no-money: "&cYou need &f%amount%&c to spin this machine."
   charged: "&7Bet placed: &f%amount%"
   lose: "&7No hit. Better luck next spin."
-  win: "&aYou won &f%amount%&a!"
+  win: "&aYou won &f%amount%&a across &f%lines%&a winning line(s)!"
   jackpot: "&d&lJACKPOT! &f%player% &dwon &f%amount%&d!"
   busy: "&cThis machine is already spinning."
-  cooldown: "&cWait a moment before spinning again."
 
 machine:
   trigger-material: STONE_BUTTON
   backing-material: BLACK_CONCRETE
   frame-glowing: true
-  spin-ticks: 70
+  spin-ticks: 76
   frame-update-ticks: 2
-  reel-stop-offset-ticks:
-    left: 40
-    middle: 52
-    right: 64
-  cooldown-millis: 1500
+  reel-stop-offset-ticks: [38, 46, 54, 62, 70]
   max-payout-multiplier: 100.0
 
 bets:
@@ -26,10 +21,11 @@ bets:
     - 5000
     - 50000
     - 100000
+    - 1000000
 
-# A win requires 3 matching symbols on one configured payline.
-# weight controls how often a symbol appears while spinning/finalizing.
-# multiplier is multiplied by the machine's wager for each winning line.
+# A win requires all 5 reels on a configured payline to match.
+# weight controls how often a symbol appears.
+# multiplier is multiplied by the machine wager for each winning line.
 symbols:
   coal:
     material: COAL
@@ -61,9 +57,17 @@ symbols:
     multiplier: 50.0
     jackpot: true
 
+# Cell layout:
+#  0  1  2  3  4
+#  5  6  7  8  9
+# 10 11 12 13 14
 paylines:
-  top: [0, 1, 2]
-  middle: [3, 4, 5]
-  bottom: [6, 7, 8]
-  diagonal-down: [0, 4, 8]
-  diagonal-up: [6, 4, 2]
+  top: [0, 1, 2, 3, 4]
+  middle: [5, 6, 7, 8, 9]
+  bottom: [10, 11, 12, 13, 14]
+  v-shape: [0, 6, 12, 8, 4]
+  inverted-v: [10, 6, 2, 8, 14]
+  upper-zigzag: [0, 6, 2, 8, 4]
+  lower-zigzag: [10, 6, 12, 8, 14]
+  upper-wave: [5, 1, 7, 3, 9]
+  lower-wave: [5, 11, 7, 13, 9]
