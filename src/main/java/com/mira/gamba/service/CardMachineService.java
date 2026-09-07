@@ -21,7 +21,6 @@ public final class CardMachineService {
     private final File file;
     private final NamespacedKey machineKey;
     private final NamespacedKey cardIndexKey;
-    private final NamespacedKey actionKey;
     private final Map<UUID, CardMachine> machines = new HashMap<>();
 
     public CardMachineService(MiraGambaPlugin plugin) {
@@ -29,7 +28,6 @@ public final class CardMachineService {
         this.file = new File(plugin.getDataFolder(), "card-machines.yml");
         this.machineKey = new NamespacedKey(plugin, "card_machine_id");
         this.cardIndexKey = new NamespacedKey(plugin, "card_index");
-        this.actionKey = new NamespacedKey(plugin, "card_action");
         load();
     }
 
@@ -64,18 +62,16 @@ public final class CardMachineService {
 
     public CardMachine byButton(Block block) {
         if (block == null) return null;
-        String id = buttonMachineId(block);
-        if (id == null) return null;
-        try {
-            return machines.get(UUID.fromString(id));
-        } catch (IllegalArgumentException ex) {
-            return null;
+        for (CardMachine machine : machines.values()) {
+            if (buttonAction(machine, block) != null) return machine;
         }
+        return null;
     }
 
     public String buttonAction(Block block) {
         if (block == null) return null;
-        return block.getPersistentDataContainer().get(actionKey, PersistentDataType.STRING);
+        CardMachine machine = byButton(block);
+        return machine == null ? null : buttonAction(machine, block);
     }
 
     public List<ItemFrame> frames(CardMachine machine) {
@@ -123,16 +119,12 @@ public final class CardMachineService {
                 if (machine.id().toString().equals(id)) frame.remove();
             }
 
-            for (var state : world.getChunkAt(machine.origin()).getTileEntities()) {
-                // no-op; buttons are ordinary blocks and are cleared below by footprint scan
-            }
-
             BlockFace right = rotateRight(machine.facing().getOppositeFace());
             for (int x = -3; x <= 3; x++) {
-                for (int y = 0; y <= 3; y++) {
+                for (int y = 0; y <= 1; y++) {
                     Block backing = offset(machine.origin(), right, x, y).getBlock();
                     Block front = backing.getRelative(machine.facing());
-                    if (buttonMachineId(front) != null) front.setType(Material.AIR, false);
+                    if (buttonAction(machine, front) != null) front.setType(Material.AIR, false);
                 }
             }
         }
@@ -232,13 +224,33 @@ public final class CardMachineService {
                 button.setBlockData(data, false);
             }
 
-            button.getPersistentDataContainer().set(machineKey, PersistentDataType.STRING, machine.id().toString());
-            button.getPersistentDataContainer().set(actionKey, PersistentDataType.STRING, entry.getKey());
         }
     }
 
-    private String buttonMachineId(Block block) {
-        return block.getPersistentDataContainer().get(machineKey, PersistentDataType.STRING);
+    private String buttonAction(CardMachine machine, Block block) {
+        if (machine == null || block == null || machine.origin().getWorld() != block.getWorld()) return null;
+
+        BlockFace right = rotateRight(machine.facing().getOppositeFace());
+        Map<String, int[]> actions = new LinkedHashMap<>();
+        actions.put("RED", new int[]{-3, 1});
+        actions.put("BLACK", new int[]{-2, 1});
+        actions.put("HIGHER", new int[]{-1, 1});
+        actions.put("LOWER", new int[]{0, 1});
+        actions.put("INSIDE", new int[]{1, 1});
+        actions.put("OUTSIDE", new int[]{2, 1});
+        actions.put("SPADES", new int[]{-3, 0});
+        actions.put("CLUBS", new int[]{-1, 0});
+        actions.put("HEARTS", new int[]{1, 0});
+        actions.put("DIAMONDS", new int[]{3, 0});
+
+        for (Map.Entry<String, int[]> entry : actions.entrySet()) {
+            int[] pos = entry.getValue();
+            Block expected = offset(machine.origin(), right, pos[0], pos[1])
+                    .getBlock()
+                    .getRelative(machine.facing());
+            if (sameBlock(expected.getLocation(), block.getLocation())) return entry.getKey();
+        }
+        return null;
     }
 
     private static Location offset(Location base, BlockFace right, int horizontal, int vertical) {
@@ -250,6 +262,13 @@ public final class CardMachineService {
             case NORTH, SOUTH, EAST, WEST -> face;
             default -> BlockFace.NORTH;
         };
+    }
+
+    private static boolean sameBlock(Location a, Location b) {
+        return a.getWorld() == b.getWorld()
+                && a.getBlockX() == b.getBlockX()
+                && a.getBlockY() == b.getBlockY()
+                && a.getBlockZ() == b.getBlockZ();
     }
 
     private static BlockFace rotateRight(BlockFace forward) {
