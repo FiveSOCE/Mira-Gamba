@@ -80,7 +80,8 @@ public final class SpinService {
 
         List<ItemFrame> finalFrames = frames;
         final int[] elapsed = {0};
-        final int task = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+        final int[] taskId = {-1};
+        taskId[0] = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             elapsed[0] += updateTicks;
 
             for (int i = 0; i < 9; i++) {
@@ -92,20 +93,16 @@ public final class SpinService {
 
             player.getWorld().playSound(machine.trigger(), Sound.BLOCK_NOTE_BLOCK_HAT, 0.35f, 1.6f);
 
-            if (elapsed[0] >= totalTicks) {
-                int id = plugin.currentTaskId();
-                if (id >= 0) plugin.getServer().getScheduler().cancelTask(id);
+            if (elapsed[0] >= totalTicks && taskId[0] >= 0) {
+                plugin.getServer().getScheduler().cancelTask(taskId[0]);
             }
         }, 0L, updateTicks);
 
-        plugin.trackTask(task);
-
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            plugin.getServer().getScheduler().cancelTask(task);
+            if (taskId[0] >= 0) plugin.getServer().getScheduler().cancelTask(taskId[0]);
             for (int i = 0; i < 9; i++) finalFrames.get(i).setItem(new ItemStack(result[i].material()), false);
             settle(player, machine, result);
             spinning.remove(machine.id());
-            plugin.untrackTask(task);
         }, totalTicks + 2L);
     }
 
