@@ -1,0 +1,69 @@
+messages:
+  prefix: "&5&lMiraGamba &8>> &r"
+  no-money: "&cYou need &f%amount%&c to spin this machine."
+  charged: "&7Bet placed: &f%amount%"
+  lose: "&7No hit. Better luck next spin."
+  win: "&aYou won &f%amount%&a!"
+  jackpot: "&d&lJACKPOT! &f%player% &dwon &f%amount%&d!"
+  busy: "&cThis machine is already spinning."
+  cooldown: "&cWait a moment before spinning again."
+
+machine:
+  trigger-material: STONE_BUTTON
+  backing-material: BLACK_CONCRETE
+  frame-glowing: true
+  spin-ticks: 70
+  frame-update-ticks: 2
+  reel-stop-offset-ticks:
+    left: 40
+    middle: 52
+    right: 64
+  cooldown-millis: 1500
+  max-payout-multiplier: 100.0
+
+bets:
+  allowed:
+    - 5000
+    - 50000
+    - 100000
+
+# A win requires 3 matching symbols on one configured payline.
+# weight controls how often a symbol appears while spinning/finalizing.
+# multiplier is multiplied by the machine's wager for each winning line.
+symbols:
+  coal:
+    material: COAL
+    weight: 34
+    multiplier: 1.5
+  iron:
+    material: IRON_INGOT
+    weight: 26
+    multiplier: 2.0
+  gold:
+    material: GOLD_INGOT
+    weight: 18
+    multiplier: 3.0
+  emerald:
+    material: EMERALD
+    weight: 11
+    multiplier: 5.0
+  diamond:
+    material: DIAMOND
+    weight: 7
+    multiplier: 10.0
+  netherite:
+    material: NETHERITE_INGOT
+    weight: 3
+    multiplier: 20.0
+  jackpot:
+    material: NETHER_STAR
+    weight: 1
+    multiplier: 50.0
+    jackpot: true
+
+paylines:
+  top: [0, 1, 2]
+  middle: [3, 4, 5]
+  bottom: [6, 7, 8]
+  diagonal-down: [0, 4, 8]
+  diagonal-up: [6, 4, 2]
