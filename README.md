@@ -4,7 +4,7 @@ Physical 3x5 slot machines for the Mira Minecraft ecosystem.
 
 ## Download
 
-[**Download MiraGamba v0.4.0**](https://github.com/FiveSOCE/Mira-Gamba/releases/download/v0.4.0/MiraGamba-0.4.0.jar)
+[**Download MiraGamba v0.4.0**](https://github.com/FiveSOCE/Mira-Gamba/releases/download/v0.4.1/MiraGamba-0.4.1.jar)
 
 [View All Releases](https://github.com/FiveSOCE/Mira-Gamba/releases)
 
