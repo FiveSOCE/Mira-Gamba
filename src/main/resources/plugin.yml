@@ -1,7 +1,7 @@
 name: MiraGamba
 version: '${version}'
 main: com.mira.gamba.MiraGambaPlugin
-api-version: '1.21'
+api-version: '1.18'
 description: Physical in-world casino games using Vault economy.
 authors: [FiveSOCE]
 depend:
