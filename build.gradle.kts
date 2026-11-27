@@ -36,5 +36,5 @@ tasks.processResources {
 }
 
 tasks.jar {
-    archiveFileName.set("MiraGamba-${project.version}.jar")
+    archiveFileName.set("MiraGamba_1.18.2.jar")
 }
