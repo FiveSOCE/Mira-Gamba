@@ -1,12 +1,14 @@
 
-## Version-specific source branches
+## Downloads and compatibility
 
-- **Modern Paper 1.21.11 and newer:** [main](https://github.com/FiveSOCE/Mira-Gamba/tree/main) (existing implementation, retained unchanged).
-- **Legacy Paper 1.18.2 / Java 17:** [compat/1.18.2](https://github.com/FiveSOCE/Mira-Gamba/tree/compat/1.18.2) (migration branch, with an automated compile check).
+| Server target | Java | Final JAR name | Download |
+| --- | --- | --- | --- |
+| **Paper 1.18.2** | 17 | Not published | [Check legacy build artifacts](https://github.com/FiveSOCE/Mira-Gamba/actions) — no direct release JAR verified |
+| **Paper 1.21.11–26.2** | Java 21 baseline; Paper 26.2 may require Java 25 | Not published | [Check releases](https://github.com/FiveSOCE/Mira-Gamba/releases) |
 
-**Important:** The legacy branch explicitly targets the Paper 1.18.2 API, but runtime support and working release downloads are **not yet verified**. Do not substitute the modern JAR for the legacy version. The build workflow must pass and 1.18.2 server testing must be completed before this can be marked a supported release.
+Install only one versioned JAR. A successful compilation is not a guarantee of in-game feature compatibility.
 
-# MiraGamba
+[Legacy source](https://github.com/FiveSOCE/Mira-Gamba/tree/compat/1.18.2) · [Modern source](https://github.com/FiveSOCE/Mira-Gamba) · [All releases](https://github.com/FiveSOCE/Mira-Gamba/releases)
 
 ## Download
 
@@ -154,3 +156,9 @@ Hold & Spin:
 - filling all 15 spaces awards the configured Grand multiplier
 
 All symbol weights, 3/4/5 payouts, scatter values, orb values, respin chance and Grand multiplier are configurable.
+
+## Dependencies and installation
+
+- **Required:** No mandatory plugin dependencies declared; matching Paper version and Java runtime.
+- **Optional integrations:** None declared.
+- Back up plugin data, remove old JARs, and restart after installing the appropriate release.
