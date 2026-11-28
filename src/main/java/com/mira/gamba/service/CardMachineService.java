@@ -230,12 +230,16 @@ public final class CardMachineService {
             }
 
             Location labelLocation = button.getLocation().add(0.5, 0.85, 0.5);
-            TextDisplay label = button.getWorld().spawn(labelLocation, TextDisplay.class, display -> {
-                display.text(plugin.component("&f" + entry.getKey()));
-                display.setBillboard(org.bukkit.entity.Display.Billboard.CENTER);
-                display.setSeeThrough(true);
-                display.setShadowed(true);
-                display.getPersistentDataContainer().set(
+            button.getWorld().spawn(labelLocation, ArmorStand.class, stand -> {
+                stand.setVisible(false);
+                stand.setMarker(true);
+                stand.setSmall(true);
+                stand.setGravity(false);
+                stand.setInvulnerable(true);
+                stand.setCustomName(org.bukkit.ChatColor.WHITE + entry.getKey());
+                stand.setCustomNameVisible(true);
+                stand.setRemoveWhenFarAway(false);
+                stand.getPersistentDataContainer().set(
                         machineKey,
                         PersistentDataType.STRING,
                         machine.id().toString()
