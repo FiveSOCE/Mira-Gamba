@@ -10,7 +10,7 @@ import org.bukkit.block.data.type.Switch;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.TextDisplay;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
@@ -119,7 +119,7 @@ public final class CardMachineService {
                 String id = frame.getPersistentDataContainer().get(machineKey, PersistentDataType.STRING);
                 if (machine.id().toString().equals(id)) frame.remove();
             }
-            for (TextDisplay display : world.getEntitiesByClass(TextDisplay.class)) {
+            for (ArmorStand display : world.getEntitiesByClass(ArmorStand.class)) {
                 String id = display.getPersistentDataContainer().get(machineKey, PersistentDataType.STRING);
                 if (machine.id().toString().equals(id)) display.remove();
             }
