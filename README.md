@@ -2,28 +2,18 @@
 
 Physical in-world casino games using Vault economy.
 
-The sections below cover version-specific downloads, dependencies, commands, permissions and plugin features for the Mira server ecosystem.
-
 ## Downloads and compatibility
 
 | Server target | Java | Final JAR name | Download |
 | --- | --- | --- | --- |
 | **Paper 1.18.2** | 17 | `MiraGamba_1.18.2.jar` | [Download 1.18.2 JAR](https://github.com/FiveSOCE/Mira-Gamba/releases/download/dev-1.18.2/MiraGamba_1.18.2.jar) |
-| **Paper 1.21.11–26.2** | Java 21 baseline; Paper 26.2 may require Java 25 | Not published | [Check releases](https://github.com/FiveSOCE/Mira-Gamba/releases) |
+| **Paper 1.21.11–26.2** | Java 21 baseline; Paper 26.2 may require Java 25 | Not yet published | [Check releases](https://github.com/FiveSOCE/Mira-Gamba/releases) |
 
-Install only one versioned JAR. A successful compilation is not a guarantee of in-game feature compatibility.
+**Build status:** Version-specific direct links are provided where published. A GitHub Actions or Releases link means the corresponding versioned JAR has not been verified. Compilation alone does not establish in-game compatibility; intermediate versions 1.19–1.21.10 remain unverified unless specifically documented.
+
+**Installation:** Back up plugin data, remove older JAR copies and install only the build matching your server. Never install both builds together.
 
 [Legacy source](https://github.com/FiveSOCE/Mira-Gamba/tree/compat/1.18.2) · [Modern source](https://github.com/FiveSOCE/Mira-Gamba) · [All releases](https://github.com/FiveSOCE/Mira-Gamba/releases)
-
-## Download
-
-**Latest compatibility release: v0.4.1**
-
-[**Download MiraGamba-0.4.1.jar**](https://github.com/FiveSOCE/Mira-Gamba/releases/download/v0.4.1/MiraGamba-0.4.1.jar)
-
-[View all releases](https://github.com/FiveSOCE/Mira-Gamba/releases)
-
-Physical 3x5 slot machines for the Mira Minecraft ecosystem.
 
 ## Wager tiers
 
