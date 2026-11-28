@@ -1,3 +1,8 @@
+# MiraGamba
+
+Physical in-world casino games using Vault economy.
+
+The sections below cover version-specific downloads, dependencies, commands, permissions and plugin features for the Mira server ecosystem.
 
 ## Downloads and compatibility
 
